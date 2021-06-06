@@ -13,8 +13,8 @@ func main() {
 		http.StripPrefix("/static/",
 			http.FileServer(http.Dir("./static"))))
 
-	http.HandleFunc("/file/upload", handler.UploadHandler)
-
+	http.HandleFunc("/file/upload", handler.UploadHandler)  // 处理上传文件
+	http.HandleFunc("/file/upload/suc", handler.UploadSucHandler) // 上传完成
 	// 监听端口
 	err := http.ListenAndServe(":8080", nil)
 	if err != nil {
