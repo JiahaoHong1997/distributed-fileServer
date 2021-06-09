@@ -3,6 +3,9 @@ package handler
 import (
 	"distributed-fileServer/meta"
 	"distributed-fileServer/util"
+	"strconv"
+
+	"encoding/json"
 	"fmt"
 	"io"
 	"io/ioutil"
@@ -22,7 +25,7 @@ func UploadHandler(w http.ResponseWriter, r *http.Request) {
 		}
 		io.WriteString(w, string(data))
 	} else if r.Method == "POST" {
-		// 接收文件流及存储到目录
+		// 接收文件流及存储到目录，选取本地文件，Form形式上传文件
 		file, head, err := r.FormFile("file") // 这里的"file"来自index.html文件
 		if err != nil {
 			fmt.Printf("Failed to get data,err:%s\n", err.Error())
@@ -31,6 +34,7 @@ func UploadHandler(w http.ResponseWriter, r *http.Request) {
 		defer file.Close()
 
 		// 保存上传文件的元信息
+		// TODO: 将文件元信息保存在mysql或redis中，避免因为保存在内存中发生丢失
 		fileMeta := meta.FileMeta{
 			FileName: head.Filename,
 			Location: "/tmp/" + head.Filename,
@@ -44,13 +48,13 @@ func UploadHandler(w http.ResponseWriter, r *http.Request) {
 		}
 		defer newFile.Close()
 
-		fileMeta.FileSize, err = io.Copy(newFile, file) // io.Copy返回文件的字节数
+		fileMeta.FileSize, err = io.Copy(newFile, file) // io.Copy返回文件的字节数，将文件复制到新建的空文件中
 		if err != nil {
 			fmt.Printf("Failed to save data into file,err:%s\n", err)
 			return
 		}
 
-		newFile.Seek(0, 0)
+		newFile.Seek(0, 0)                         // 将当前已打开的文件句柄的游标移到文件内容的顶部
 		fileMeta.FileSha1 = util.FileSha1(newFile) // 生成该文件的唯一识别符
 		meta.UpdateFileMeta(fileMeta)              // 更新该文件的元信息(唯一识别符)
 
@@ -61,4 +65,35 @@ func UploadHandler(w http.ResponseWriter, r *http.Request) {
 // UploadSucHandler: 上传已完成
 func UploadSucHandler(w http.ResponseWriter, r *http.Request) {
 	io.WriteString(w, "Upload finished!")
+}
+
+// GetFileMetaHandler: 获取文件元信息
+func GetFileMetaHandler(w http.ResponseWriter, r *http.Request) {
+
+	// 通过解析url的Form表单获取文件的hash值
+	r.ParseForm()
+
+	// Form返回的是一个url.Values的结构，其实是hash，hash中每个value是一个string的slice，使用当我们使用r.Form[“filehash”]获得的其实是一个slice
+	filehash := r.Form["filehash"][0]
+	fMeta := meta.GetFileMeta(filehash)
+	data, err := json.Marshal(fMeta)
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+	w.Write(data)
+}
+
+// FileQueryHandler: 查询批量的文件元信息
+func FileQueryHandler(w http.ResponseWriter, r *http.Request) {
+	r.ParseForm()
+
+	limitCnt, _ := strconv.Atoi(r.Form.Get("limit"))
+	fileMetas := meta.GetLastFileMetas(limitCnt)
+	data, err := json.Marshal(fileMetas)
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+	w.Write(data)
 }
