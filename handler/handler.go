@@ -88,12 +88,37 @@ func GetFileMetaHandler(w http.ResponseWriter, r *http.Request) {
 func FileQueryHandler(w http.ResponseWriter, r *http.Request) {
 	r.ParseForm()
 
-	limitCnt, _ := strconv.Atoi(r.Form.Get("limit"))
+	limitCnt, _ := strconv.Atoi(r.Form.Get("limit")) // 根据URL中的表单信息获取要查询的文件元信息数量
 	fileMetas := meta.GetLastFileMetas(limitCnt)
 	data, err := json.Marshal(fileMetas)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
+	w.Write(data)
+}
+
+// DownloadHandler: 文件下载
+func DownloadHandler(w http.ResponseWriter, r *http.Request) {
+	r.ParseForm()
+
+	fsha1 := r.Form.Get("filehash")
+	fm := meta.GetFileMeta(fsha1) // 得到文件的元信息
+
+	f, err := os.Open(fm.Location)
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+	defer f.Close()
+
+	data, err := ioutil.ReadAll(f) // 针对小文件，将其全部读入到内存中去
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/octect-stream")
+	w.Header().Set("Content-Disposition", "attachment;filename=\""+fm.FileName+"\"")
 	w.Write(data)
 }

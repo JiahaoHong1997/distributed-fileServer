@@ -17,6 +17,7 @@ func main() {
 	http.HandleFunc("/file/upload/suc", handler.UploadSucHandler) // 上传完成
 	http.HandleFunc("/file/meta", handler.GetFileMetaHandler)     // 获取上传文件元信息
 	http.HandleFunc("/file/query", handler.FileQueryHandler)      // 批量获取上传文件的元信息
+	http.HandleFunc("/file/download", handler.DownloadHandler)    // 文件下载
 
 	// 监听端口
 	err := http.ListenAndServe(":8080", nil)
