@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="176947a1-3d43-4bc6-b622-081be03cab88" name="Default Changelist" comment="批量获取上传文件的元信息">
+    <list default="true" id="176947a1-3d43-4bc6-b622-081be03cab88" name="Default Changelist" comment="文件下载接口实现">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/handler/handler.go" beforeDir="false" afterPath="$PROJECT_DIR$/handler/handler.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/main.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/meta/fileMeta.go" beforeDir="false" afterPath="$PROJECT_DIR$/meta/fileMeta.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -82,7 +84,8 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="保存文件元信息" />
     <MESSAGE value="批量获取上传文件的元信息" />
-    <option name="LAST_COMMIT_MESSAGE" value="批量获取上传文件的元信息" />
+    <MESSAGE value="文件下载接口实现" />
+    <option name="LAST_COMMIT_MESSAGE" value="文件下载接口实现" />
   </component>
   <component name="VgoProject">
     <integration-enabled>true</integration-enabled>
