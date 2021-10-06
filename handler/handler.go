@@ -127,11 +127,11 @@ func DownloadHandler(w http.ResponseWriter, r *http.Request) {
 func FileMetaUpdateHandler(w http.ResponseWriter, r *http.Request) {
 	r.ParseForm()
 
-	opType := r.Form.Get("op")
+	opType := r.Form.Get("op") // 是否支持重命名
 	fileSha1 := r.Form.Get("filehash")
 	newFileName := r.Form.Get("filename")
 
-	if opType != "0" {
+	if opType != "0" { // opType在等于0的情况下才支持重命名
 		w.WriteHeader(http.StatusForbidden)
 		return
 	}
@@ -140,9 +140,9 @@ func FileMetaUpdateHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	curFileMeta := meta.GetFileMeta(fileSha1)
-	curFileMeta.FileName = newFileName
-	meta.UpdateFileMeta(curFileMeta)
+	curFileMeta := meta.GetFileMeta(fileSha1) // 获取要修改文件的文件元信息
+	curFileMeta.FileName = newFileName        // 修改文件名
+	meta.UpdateFileMeta(curFileMeta)          // 更新文件元信息
 
 	w.WriteHeader(http.StatusOK)
 	data, err := json.Marshal(curFileMeta)
