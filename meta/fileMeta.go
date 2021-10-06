@@ -1,6 +1,9 @@
 package meta
 
-import "sort"
+import (
+	mydb "distributed-fileServer/db"
+	"sort"
+)
 
 // FileMeta: 文件元信息结构
 type FileMeta struct {
@@ -22,9 +25,29 @@ func UpdateFileMeta(fMeta FileMeta) {
 	fileMetas[fMeta.FileSha1] = fMeta
 }
 
+// UpdateFileMetaDB：新增/更新文件元信息到mysql中
+func UpdateFileMetaDB(fMeta FileMeta) bool {
+	return mydb.OnFileUploadFinished(fMeta.FileSha1, fMeta.FileName, fMeta.FileSize, fMeta.Location)
+}
+
 // GetFileMeta: 通过Sha1值获取元件的元信息对象
 func GetFileMeta(fileSha1 string) FileMeta {
 	return fileMetas[fileSha1]
+}
+
+// GetFileMetaDB：从mysql获取文件元信息
+func GetFileMetaDB(fileSha1 string) (FileMeta, error) {
+	tfile, err := mydb.GetFileMeta(fileSha1)
+	if err != nil {
+		return FileMeta{}, err
+	}
+	fMeta := FileMeta{
+		FileSha1: tfile.FileHash,
+		FileName: tfile.FileName.String,
+		FileSize: tfile.FileSize.Int64,
+		Location: tfile.FileAddr.String,
+	}
+	return fMeta, nil
 }
 
 // GetLastFileMetas: 获取批量的原件元信息列表

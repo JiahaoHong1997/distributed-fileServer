@@ -56,7 +56,8 @@ func UploadHandler(w http.ResponseWriter, r *http.Request) {
 
 		newFile.Seek(0, 0)                         // 将当前已打开的文件句柄的游标移到文件内容的顶部
 		fileMeta.FileSha1 = util.FileSha1(newFile) // 生成该文件的唯一识别符
-		meta.UpdateFileMeta(fileMeta)              // 更新该文件的元信息(唯一识别符)
+		//meta.UpdateFileMeta(fileMeta)              // 更新该文件的元信息(唯一识别符)
+		meta.UpdateFileMetaDB(fileMeta)
 
 		http.Redirect(w, r, "/file/upload/suc", http.StatusFound)
 	}
@@ -75,8 +76,14 @@ func GetFileMetaHandler(w http.ResponseWriter, r *http.Request) {
 
 	// Form返回的是一个url.Values的结构，其实是hash，hash中每个value是一个string的slice，使用当我们使用r.Form[“filehash”]获得的其实是一个slice
 	filehash := r.Form["filehash"][0]
-	fMeta := meta.GetFileMeta(filehash)
+	//fMeta := meta.GetFileMeta(filehash)
+	fMeta, err := meta.GetFileMetaDB(filehash) // 从mysql中获取文件元信息
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
 	data, err := json.Marshal(fMeta)
+
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		return

@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="176947a1-3d43-4bc6-b622-081be03cab88" name="Default Changelist" comment="更新文档">
-      <change afterPath="$PROJECT_DIR$/db/file.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/db/mysql/conn.go" afterDir="false" />
+    <list default="true" id="176947a1-3d43-4bc6-b622-081be03cab88" name="Default Changelist" comment="持久化元数据到文件表">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/go.mod" beforeDir="false" afterPath="$PROJECT_DIR$/go.mod" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/db/file.go" beforeDir="false" afterPath="$PROJECT_DIR$/db/file.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/db/mysql/conn.go" beforeDir="false" afterPath="$PROJECT_DIR$/db/mysql/conn.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/handler/handler.go" beforeDir="false" afterPath="$PROJECT_DIR$/handler/handler.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/meta/fileMeta.go" beforeDir="false" afterPath="$PROJECT_DIR$/meta/fileMeta.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -24,7 +25,7 @@
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="master" />
+        <entry key="$PROJECT_DIR$" value="fileHandler" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -39,6 +40,7 @@
     <option name="showLibraryContents" value="true" />
   </component>
   <component name="PropertiesComponent">
+    <property name="ASKED_ADD_EXTERNAL_FILES" value="true" />
     <property name="DefaultGoTemplateProperty" value="Go File" />
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
@@ -59,6 +61,22 @@
     <key name="MoveFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$" />
     </key>
+  </component>
+  <component name="RunManager">
+    <configuration name="go build conn.go" type="GoApplicationRunConfiguration" factoryName="Go Application" temporary="true" nameIsGenerated="true">
+      <module name="distributed-fileServer" />
+      <working_directory value="$PROJECT_DIR$" />
+      <kind value="FILE" />
+      <package value="distributed-fileServer" />
+      <directory value="$PROJECT_DIR$" />
+      <filePath value="$PROJECT_DIR$/db/mysql/conn.go" />
+      <method v="2" />
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Go Build.go build conn.go" />
+      </list>
+    </recent_temporary>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TypeScriptGeneratedFilesManager">
@@ -87,7 +105,8 @@
     <MESSAGE value="批量获取上传文件的元信息" />
     <MESSAGE value="文件下载接口实现" />
     <MESSAGE value="更新文档" />
-    <option name="LAST_COMMIT_MESSAGE" value="更新文档" />
+    <MESSAGE value="持久化元数据到文件表" />
+    <option name="LAST_COMMIT_MESSAGE" value="持久化元数据到文件表" />
   </component>
   <component name="VgoProject">
     <integration-enabled>true</integration-enabled>
