@@ -2,11 +2,32 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="176947a1-3d43-4bc6-b622-081be03cab88" name="Default Changelist" comment="从mysql的文件表中获取数据的元信息">
+      <change afterPath="$PROJECT_DIR$/db/user.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/handler/user.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/db/file.go" beforeDir="false" afterPath="$PROJECT_DIR$/db/file.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/handler/handler.go" beforeDir="false" afterPath="$PROJECT_DIR$/handler/handler.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/meta/fileMeta.go" beforeDir="false" afterPath="$PROJECT_DIR$/meta/fileMeta.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/main.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/css/bootstrap-theme.min.css" beforeDir="false" afterPath="$PROJECT_DIR$/static/css/bootstrap-theme.min.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/css/bootstrap.min.css" beforeDir="false" afterPath="$PROJECT_DIR$/static/css/bootstrap.min.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/css/fileinput.min.css" beforeDir="false" afterPath="$PROJECT_DIR$/static/css/fileinput.min.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/img/avatar.jpeg" beforeDir="false" afterPath="$PROJECT_DIR$/static/img/avatar.jpeg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/js/FileSaver.js" beforeDir="false" afterPath="$PROJECT_DIR$/static/js/FileSaver.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/js/StreamSaver.js" beforeDir="false" afterPath="$PROJECT_DIR$/static/js/StreamSaver.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/js/bootstrap.min.js" beforeDir="false" afterPath="$PROJECT_DIR$/static/js/bootstrap.min.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/js/fileinput.min.js" beforeDir="false" afterPath="$PROJECT_DIR$/static/js/fileinput.min.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/js/jquery-3.2.1.min.js" beforeDir="false" afterPath="$PROJECT_DIR$/static/js/jquery-3.2.1.min.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/js/jquery.min.js" beforeDir="false" afterPath="$PROJECT_DIR$/static/js/jquery.min.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/js/jquery.min.map" beforeDir="false" afterPath="$PROJECT_DIR$/static/js/jquery.min.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/js/layer.js" beforeDir="false" afterPath="$PROJECT_DIR$/static/js/layer.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/js/layui.js" beforeDir="false" afterPath="$PROJECT_DIR$/static/js/layui.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/js/piexif.min.js" beforeDir="false" afterPath="$PROJECT_DIR$/static/js/piexif.min.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/js/polyfill.min.js" beforeDir="false" afterPath="$PROJECT_DIR$/static/js/polyfill.min.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/js/popper.min.js" beforeDir="false" afterPath="$PROJECT_DIR$/static/js/popper.min.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/js/purify.min.js" beforeDir="false" afterPath="$PROJECT_DIR$/static/js/purify.min.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/js/sortable.min.js" beforeDir="false" afterPath="$PROJECT_DIR$/static/js/sortable.min.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/js/sw.js" beforeDir="false" afterPath="$PROJECT_DIR$/static/js/sw.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/js/theme.js" beforeDir="false" afterPath="$PROJECT_DIR$/static/js/theme.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/js/theme/default/layer.css" beforeDir="false" afterPath="$PROJECT_DIR$/static/js/theme/default/layer.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/view/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/static/view/index.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

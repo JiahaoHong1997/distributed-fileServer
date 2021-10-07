@@ -21,6 +21,8 @@ func main() {
 	http.HandleFunc("/file/update", handler.FileMetaUpdateHandler) // 更新文件元信息(重命名)
 	http.HandleFunc("/file/delete", handler.FileDeleteHandler)     // 删除文件以及文件元信息
 
+	http.HandleFunc("/user/signup", handler.SignUpHandler) // 用户注册
+
 	// 监听端口
 	err := http.ListenAndServe(":8080", nil)
 	if err != nil {
