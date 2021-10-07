@@ -57,9 +57,9 @@ func UploadHandler(w http.ResponseWriter, r *http.Request) {
 		newFile.Seek(0, 0)                         // 将当前已打开的文件句柄的游标移到文件内容的顶部
 		fileMeta.FileSha1 = util.FileSha1(newFile) // 生成该文件的唯一识别符
 		//meta.UpdateFileMeta(fileMeta)              // 更新该文件的元信息(唯一识别符)
-		meta.UpdateFileMetaDB(fileMeta)
+		_ = meta.UpdateFileMetaDB(fileMeta)
 
-		http.Redirect(w, r, "/file/upload/suc", http.StatusFound)
+		http.Redirect(w, r, "/file/upload/suc", http.StatusFound)  // 上传完成后直接跳转完成页面
 	}
 }
 
@@ -96,7 +96,13 @@ func FileQueryHandler(w http.ResponseWriter, r *http.Request) {
 	r.ParseForm()
 
 	limitCnt, _ := strconv.Atoi(r.Form.Get("limit")) // 根据URL中的表单信息获取要查询的文件元信息数量
-	fileMetas := meta.GetLastFileMetas(limitCnt)
+	fileMetas, err := meta.GetLastFileMetasDB(limitCnt)
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	// 封装为json格式返回给客户端
 	data, err := json.Marshal(fileMetas)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
@@ -110,8 +116,12 @@ func DownloadHandler(w http.ResponseWriter, r *http.Request) {
 	r.ParseForm()
 
 	fsha1 := r.Form.Get("filehash")
-	fm := meta.GetFileMeta(fsha1) // 得到文件的元信息
-
+	//fm := meta.GetFileMeta(fsha1) // 得到文件的元信息
+	fm, err := meta.GetFileMetaDB(fsha1)
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
 	f, err := os.Open(fm.Location)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
@@ -147,9 +157,18 @@ func FileMetaUpdateHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	curFileMeta := meta.GetFileMeta(fileSha1) // 获取要修改文件的文件元信息
+	//curFileMeta := meta.GetFileMeta(fileSha1) // 获取要修改文件的文件元信息
+	curFileMeta, err := meta.GetFileMetaDB(fileSha1)
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
 	curFileMeta.FileName = newFileName        // 修改文件名
-	meta.UpdateFileMeta(curFileMeta)          // 更新文件元信息
+	suc := meta.UpdateFileMetaDB(curFileMeta)          // 更新文件元信息
+	if suc != true {
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
 
 	w.WriteHeader(http.StatusOK)
 	data, err := json.Marshal(curFileMeta)
@@ -165,10 +184,18 @@ func FileDeleteHandler(w http.ResponseWriter, r *http.Request) {
 	r.ParseForm()
 	fileSha1 := r.Form.Get("filehash")
 
-	fMeta := meta.GetFileMeta(fileSha1)
+	fMeta,err := meta.GetFileMetaDB(fileSha1)
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
 	os.Remove(fMeta.Location) // 删除文件
 
-	meta.RemoveFileMeta(fileSha1) // 删除文件元信息
+	suc := meta.OnFileRemovedDB(fileSha1) // 删除文件元信息
+	if !suc {
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
 
 	w.WriteHeader(http.StatusOK)
 }
