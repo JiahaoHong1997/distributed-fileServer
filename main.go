@@ -22,6 +22,7 @@ func main() {
 	http.HandleFunc("/file/delete", handler.FileDeleteHandler)     // 删除文件以及文件元信息
 
 	http.HandleFunc("/user/signup", handler.SignUpHandler) // 用户注册
+	http.HandleFunc("/user/signin", handler.SignInHandler) // 用户登录
 
 	// 监听端口
 	err := http.ListenAndServe(":8080", nil)
