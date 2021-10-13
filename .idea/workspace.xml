@@ -1,10 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="176947a1-3d43-4bc6-b622-081be03cab88" name="Default Changelist" comment="实现用户注册接口并更新前段界面">
-      <change afterPath="$PROJECT_DIR$/util/resp.go" afterDir="false" />
+    <list default="true" id="176947a1-3d43-4bc6-b622-081be03cab88" name="Default Changelist" comment="实现用户登录接口">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/db/mysql/conn.go" beforeDir="false" afterPath="$PROJECT_DIR$/db/mysql/conn.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/db/user.go" beforeDir="false" afterPath="$PROJECT_DIR$/db/user.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/handler/user.go" beforeDir="false" afterPath="$PROJECT_DIR$/handler/user.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/main.go" afterDir="false" />
@@ -109,7 +107,8 @@
     <MESSAGE value="持久化元数据到文件表" />
     <MESSAGE value="从mysql的文件表中获取数据的元信息" />
     <MESSAGE value="实现用户注册接口并更新前段界面" />
-    <option name="LAST_COMMIT_MESSAGE" value="实现用户注册接口并更新前段界面" />
+    <MESSAGE value="实现用户登录接口" />
+    <option name="LAST_COMMIT_MESSAGE" value="实现用户登录接口" />
   </component>
   <component name="VgoProject">
     <integration-enabled>true</integration-enabled>
