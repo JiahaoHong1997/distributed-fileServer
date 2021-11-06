@@ -57,7 +57,10 @@
 
 返回的Header中状态码显示为200，表明成功删除。
 
+
+
 ## 将文件元信息存储在mysql数据库中持久化
+
 ### 新的文件上传完成后保存元信息的接口
 &emsp;&emsp;实现`OnFileUploadFinished`方法，在文件上传完成后，将文件的元信息保存在mysql数据库中。
 
@@ -69,3 +72,65 @@
 
 ### 从数据库中删除（更改状态为删除）
 &emsp;&emsp;实现`OnFileRemoved`方法，将被删除的文件在mysql中的status置为2。
+
+
+
+## 账号系统与鉴权
+
+### 功能介绍
+
+* 用户的注册/登录
+* 持久化用户Sesion鉴权
+* 用户数据资源隔离
+
+
+
+### 用户的注册/登录
+
+&emsp;&emsp;实现`SignUpHandler`方法，通过路由`/user/signup`可以实现用户的注册操作。其逻辑可以分为以下几个步骤：
+
+```
+判断如果是http Get请求，直接返回注册页面内容
+校验参数的有效性
+加密用户名密码
+存入数据库表tbl_user并返回结果
+```
+
+![avatar](./doc/signup.jpg)
+
+&emsp;&emsp;实现`SignInHandler`方法，通过路由`/user/signin`可以实现用户的登录操作。其逻辑可以分为以下几个步骤：
+
+```
+校验用户名及密码
+生成访问凭证（token）
+存储token到tbl_user_token表
+登录成功后重定向到首页
+```
+
+![avatar](./doc/signin.jpg)
+
+### 用户信息查询
+
+&emsp;&emsp;实现`UserInfoHandler`方法，在登录后会可以通过跳转到路由`/user/info`上查看用户的信息。其逻辑可以分为以下几个步骤：
+
+```
+解析请求参数
+验证token是否有效（token是否在数据库中、token是否过期）
+查询用户信息
+组装并且响应用户数据
+```
+
+
+
+## 拦截器验证token
+
+&emsp;&emsp;拦截器的生效时间：服务器在接收到用户的请求之后，在转发到具体的handler之前。将请求拦截下来，验证token是否有效（用户名是否正确）。通过`HTTPInterceptor`方法实现，其逻辑如下：
+
+```
+判断token是否有效
+无效的话直接返回错误信息给客户端
+有效则继续传递给具体的handler函数中进行逻辑处理
+```
+
+
+
