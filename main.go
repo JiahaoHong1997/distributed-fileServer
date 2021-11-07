@@ -20,6 +20,7 @@ func main() {
 	http.HandleFunc("/file/download", handler.DownloadHandler)     // 文件下载
 	http.HandleFunc("/file/update", handler.FileMetaUpdateHandler) // 更新文件元信息(重命名)
 	http.HandleFunc("/file/delete", handler.FileDeleteHandler)     // 删除文件以及文件元信息
+	http.HandleFunc("/file/fastupload",handler.HTTPInterceptor(handler.TryFastUploadHandler))  // 尝试秒传的接口
 
 	http.HandleFunc("/user/signup", handler.SignUpHandler) // 用户注册
 	http.HandleFunc("/user/signin", handler.SignInHandler) // 用户登录

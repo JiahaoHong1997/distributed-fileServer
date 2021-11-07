@@ -35,7 +35,6 @@ func UploadHandler(w http.ResponseWriter, r *http.Request) {
 		defer file.Close()
 
 		// 保存上传文件的元信息
-		// TODO: 将文件元信息保存在mysql或redis中，避免因为保存在内存中发生丢失
 		fileMeta := meta.FileMeta{
 			FileName: head.Filename,
 			Location: "/tmp/" + head.Filename,
@@ -69,6 +68,53 @@ func UploadHandler(w http.ResponseWriter, r *http.Request) {
 		} else {
 			w.Write([]byte("Upload Failed."))
 		}
+	}
+}
+
+// TryFastUploadHandler：尝试秒传的接口
+func TryFastUploadHandler(w http.ResponseWriter, r *http.Request) {
+	r.ParseForm()
+
+	// 1.解析请求参数
+	userName := r.Form.Get("username")
+	fileHash := r.Form.Get("filehash")
+	fileName := r.Form.Get("filename")
+	filesize,_ := strconv.Atoi(r.Form.Get("filesize"))
+
+	// 2.从文件表中查询相同hash的文件记录
+	fileMeta,err := meta.GetFileMetaDB(fileHash)
+	if err != nil {
+		fmt.Println(err.Error())
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	// 3.查不到记录则返回秒传失败
+	if fileMeta.FileSha1 == "" {
+		resp := util.RespMsg{
+			Code: -1,
+			Msg:"秒传失败，请访问普通上传接口",
+		}
+		w.Write(resp.JSONBytes())
+		return
+	}
+
+	// 4.上传过则将文件信息写入用户文件表，返回成功
+	suc := dblayer.OnUserFileUploadFinished(userName,fileHash,fileName,int64(filesize))
+	if suc {
+		resp := util.RespMsg{
+			Code: 0,
+			Msg:"秒传成功",
+		}
+		w.Write(resp.JSONBytes())
+		return
+	} else {
+		resp := util.RespMsg{
+			Code: -2,
+			Msg:"秒传失败，请稍后重试",
+		}
+		w.Write(resp.JSONBytes())
+		return
 	}
 }
 
