@@ -1,18 +1,30 @@
 package handler
 
-import "net/http"
+import (
+	"distributed-fileServer/common"
+	"distributed-fileServer/util"
+	"net/http"
+)
 
-// HTTPInterceptor: http请求拦截器
+// HTTPInterceptor : http请求拦截器
 func HTTPInterceptor(h http.HandlerFunc) http.HandlerFunc {
 	return http.HandlerFunc(
 		func(w http.ResponseWriter, r *http.Request) {
 			r.ParseForm()
-			userName := r.Form.Get("username")
+			username := r.Form.Get("username")
 			token := r.Form.Get("token")
 
-			if len(userName)<3 || !IsTokenValid(token) {
-				w.WriteHeader(http.StatusForbidden)
+			//验证登录token是否有效
+			if len(username) < 3 || !IsTokenValid(token) {
+				// token校验失败则跳转到直接返回失败提示
+				resp := util.NewRespMsg(
+					int(common.StatusInvalidToken),
+					"token无效",
+					nil,
+				)
+				w.Write(resp.JSONBytes())
+				return
 			}
-			h(w,r)
+			h(w, r)
 		})
 }

@@ -1,62 +1,60 @@
 package handler
 
 import (
-	dblayer "distributed-fileServer/db"
-	"distributed-fileServer/util"
 	"fmt"
-	"io/ioutil"
+	// "io/ioutil"
 	"net/http"
 	"time"
+
+	dblayer "distributed-fileServer/db"
+	"distributed-fileServer/util"
 )
 
 const (
-	pwd_salt = "*#890"
+	// 用于加密的盐值(自定义)
+	pwdSalt = "*#890"
 )
 
-// SignUpHandler:处理用户注册请求
+// SignupHandler : 处理用户注册请求
 func SignUpHandler(w http.ResponseWriter, r *http.Request) {
-
-	// 1.判断如果是http Get请求，直接返回注册页面内容
 	if r.Method == http.MethodGet {
-		data, err := ioutil.ReadFile("./static/view/signup.html")
-		if err != nil {
-			w.WriteHeader(http.StatusInternalServerError)
-			return
-		}
-		w.Write(data)
+		// data, err := ioutil.ReadFile("./static/view/signup.html")
+		// if err != nil {
+		// 	w.WriteHeader(http.StatusInternalServerError)
+		// 	return
+		// }
+		// w.Write(data)
+		http.Redirect(w, r, "/static/view/signup.html", http.StatusFound)
 		return
 	}
-
 	r.ParseForm()
-	userName := r.Form.Get("username")
+
+	username := r.Form.Get("username")
 	passwd := r.Form.Get("password")
 
-	// 2.校验参数的有效性
-	if len(userName) < 3 || len(passwd) < 5 {
-		w.Write([]byte("Invilid parameter"))
+	if len(username) < 3 || len(passwd) < 5 {
+		w.Write([]byte("Invalid parameter"))
 		return
 	}
 
-	// 3.加密用户名密码
-	enc_passwd := util.Sha1([]byte(passwd + pwd_salt))
-
-	// 4.存入数据库表tbl_user并返回结果
-	suc := dblayer.UserSignUp(userName, enc_passwd)
+	// 对密码进行加盐及取Sha1值加密
+	encPasswd := util.Sha1([]byte(passwd + pwdSalt))
+	// 将用户信息注册到用户表中
+	suc := dblayer.UserSignUp(username, encPasswd)
 	if suc {
 		w.Write([]byte("SUCCESS"))
 	} else {
-		w.Write([]byte("Failed"))
+		w.Write([]byte("FAILED"))
 	}
 }
 
-// SignInHandler：登录接口
+// SignInHandler : 登录接口
 func SignInHandler(w http.ResponseWriter, r *http.Request) {
-
 	if r.Method == http.MethodGet {
 		// data, err := ioutil.ReadFile("./static/view/signin.html")
 		// if err != nil {
-		//  w.WriteHeader(http.StatusInternalServerError)
-		//  return
+		// 	w.WriteHeader(http.StatusInternalServerError)
+		// 	return
 		// }
 		// w.Write(data)
 		http.Redirect(w, r, "/static/view/signin.html", http.StatusFound)
@@ -64,28 +62,28 @@ func SignInHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	r.ParseForm()
-	userName := r.Form.Get("username")
-	passWord := r.Form.Get("password")
-	encPasswd := util.Sha1([]byte(passWord + pwd_salt))
+	username := r.Form.Get("username")
+	password := r.Form.Get("password")
 
-	// 1.校验用户名及密码
-	pwdChecked := dblayer.UserSignIn(userName, encPasswd)
+	encPasswd := util.Sha1([]byte(password + pwdSalt))
+
+	// 1. 校验用户名及密码
+	pwdChecked := dblayer.UserSignIn(username, encPasswd)
 	if !pwdChecked {
-		w.Write([]byte("Failed!"))
+		w.Write([]byte("FAILED"))
 		return
 	}
 
-	// 2.生成访问凭证（token）
-	token := GenToken(userName)
-
-	// 3.存储token到tbl_user_token表
-	upRes := dblayer.UpdateToken(userName, token)
+	// 2. 生成访问凭证(token)
+	token := GenToken(username)
+	upRes := dblayer.UpdateToken(username, token)
 	if !upRes {
-		w.Write([]byte("Failed!"))
+		w.Write([]byte("FAILED"))
 		return
 	}
 
-	// 4.登录成功后重定向到首页
+	// 3. 登录成功后重定向到首页
+	//w.Write([]byte("http://" + r.Host + "/static/view/home.html"))
 	resp := util.RespMsg{
 		Code: 0,
 		Msg:  "OK",
@@ -95,35 +93,35 @@ func SignInHandler(w http.ResponseWriter, r *http.Request) {
 			Token    string
 		}{
 			Location: "http://" + r.Host + "/static/view/home.html",
-			Username: userName,
+			Username: username,
 			Token:    token,
 		},
 	}
 	w.Write(resp.JSONBytes())
-
 }
 
-// UserInfoHandler:查新用户信息接口
+// UserInfoHandler ： 查询用户信息
 func UserInfoHandler(w http.ResponseWriter, r *http.Request) {
-	// 1.解析请求参数
+	// 1. 解析请求参数
 	r.ParseForm()
-	userName := r.Form.Get("username")
-	token := r.Form.Get("token")
+	username := r.Form.Get("username")
+	//	token := r.Form.Get("token")
 
-	//2.验证token是否有效
-	isValidToken := IsTokenValid(token)
-	if !isValidToken {
-		w.WriteHeader(http.StatusForbidden)
-		return
-	}
+	// // 2. 验证token是否有效
+	// isValidToken := IsTokenValid(token)
+	// if !isValidToken {
+	// 	w.WriteHeader(http.StatusForbidden)
+	// 	return
+	// }
 
-	// 3.查询用户信息
-	user, err := dblayer.GetUserInfo(userName)
+	// 3. 查询用户信息
+	user, err := dblayer.GetUserInfo(username)
 	if err != nil {
 		w.WriteHeader(http.StatusForbidden)
 		return
 	}
-	// 4.组装并且响应用户数据
+
+	// 4. 组装并且响应用户数据
 	resp := util.RespMsg{
 		Code: 0,
 		Msg:  "OK",
@@ -132,26 +130,34 @@ func UserInfoHandler(w http.ResponseWriter, r *http.Request) {
 	w.Write(resp.JSONBytes())
 }
 
-func GenToken(userName string) string {
-	// 40位字符md5(userName+timestamp+token_salt)+timestamp[:8]
+// GenToken : 生成token
+func GenToken(username string) string {
+	// 40位字符:md5(username+timestamp+token_salt)+timestamp[:8]
 	ts := fmt.Sprintf("%x", time.Now().Unix())
-	tokenPrefix := util.MD5([]byte(userName + ts + "_tokensalt"))
+	tokenPrefix := util.MD5([]byte(username + ts + "_tokensalt"))
 	return tokenPrefix + ts[:8]
 }
 
-// IsTokenValid：token是否有效
+// IsTokenValid : token是否有效
 func IsTokenValid(token string) bool {
 	if len(token) != 40 {
 		return false
 	}
-	// 判断token的时效性，是否过期
-	// example，假设token的有效期为1天
-	//n := len(token)
-	//tokenTS := token[n-8:]
-	//if util.Hex2Dec(tokenTS) < time.Now().Unix()-86400 {
-	//	return false
-	//}
-	// TODO:从数据库表tbl-user_token查询对应的username的token信息
-	// TODO:对比两个token是否一致
+
+	// TODO: 判断token的时效性，是否过期
+	// example，假设token的有效期为1天   (根据同学们反馈完善, 相对于视频有所更新)
+	tokenTS := token[len(token)-8:]
+	if util.Hex2Dec(tokenTS) < time.Now().Unix()-86400 {
+		return false
+	}
+
+	// TODO: 从数据库表tbl_user_token查询username对应的token信息
+	// TODO: 对比两个token是否一致
+	// example, IsTokenValid方法增加传入参数username
+
+	// if dblayer.GetUserToken(username) != token {
+	// 	return false
+	// }
+
 	return true
 }

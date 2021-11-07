@@ -105,14 +105,17 @@ func FileQueryHandler(w http.ResponseWriter, r *http.Request) {
 	r.ParseForm()
 
 	limitCnt, _ := strconv.Atoi(r.Form.Get("limit")) // 根据URL中的表单信息获取要查询的文件元信息数量
-	fileMetas, err := meta.GetLastFileMetasDB(limitCnt)
+	//userFile, err := meta.GetLastFileMetasDB(limitCnt)
+
+	userName := r.Form.Get("username")
+	userFile,err := dblayer.QueryUserFileMetas(userName,limitCnt)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
 
 	// 封装为json格式返回给客户端
-	data, err := json.Marshal(fileMetas)
+	data, err := json.Marshal(userFile)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		return
