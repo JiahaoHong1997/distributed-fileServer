@@ -1,6 +1,7 @@
 package handler
 
 import (
+	dblayer "distributed-fileServer/db"
 	"distributed-fileServer/meta"
 	"distributed-fileServer/util"
 	"strconv"
@@ -59,7 +60,15 @@ func UploadHandler(w http.ResponseWriter, r *http.Request) {
 		//meta.UpdateFileMeta(fileMeta)              // 更新该文件的元信息(唯一识别符)
 		_ = meta.UpdateFileMetaDB(fileMeta)
 
-		http.Redirect(w, r, "/file/upload/suc", http.StatusFound)  // 上传完成后直接跳转完成页面
+		// 更新用户文件表记录
+		r.ParseForm()
+		userName := r.Form.Get("username")
+		suc := dblayer.OnUserFileUploadFinished(userName, fileMeta.FileSha1,fileMeta.FileName,fileMeta.FileSize)
+		if suc {
+			http.Redirect(w, r, "/static/view/home.html", http.StatusFound)  // 上传完成后直接跳转完成页面
+		} else {
+			w.Write([]byte("Upload Failed."))
+		}
 	}
 }
 
